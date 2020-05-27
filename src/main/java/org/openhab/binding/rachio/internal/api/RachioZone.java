@@ -70,7 +70,7 @@ public class RachioZone extends RachioCloudZone {
             logger.trace("RachioZone: Zone '{}' (number={}, id={}, enable={}) initialized.", zone.name, zone.zoneNumber,
                     zone.id, zone.enabled);
         } catch (Exception e) {
-            logger.error("RachioZone: Unable to initialized: {}", e.getMessage());
+            logger.warn("RachioZone: Unable to initialized: {}", e.getMessage());
         }
     }
 

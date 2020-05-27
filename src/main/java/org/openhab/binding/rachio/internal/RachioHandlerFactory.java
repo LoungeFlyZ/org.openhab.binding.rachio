@@ -94,7 +94,7 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
                 return new RachioDeviceHandler(thing);
             }
         } catch (Exception e) {
-            logger.error("RachioHandlerFactory:Exception while creating Rachio RThing handler: {}", e);
+            logger.warn("RachioHandlerFactory:Exception while creating Rachio RThing handler: {}", e);
         }
 
         logger.debug("RachioHandlerFactory:: Unable to create thing handler!");
@@ -138,7 +138,7 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
             logger.info("RachioEvent: Unauthorized webhook event (wrong externalId: '{}')", event.externalId);
             return false;
         } catch (Exception e) {
-            logger.error("RachioEvent: Unable to process event: {}", e.getMessage());
+            logger.warn("RachioEvent: Unable to process event: {}", e.getMessage());
 
         }
         logger.debug("RachioEvent: Unable to route event to bridge, externalId='{}', deviceId='{}'", event.externalId,
@@ -174,7 +174,7 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
             registerDiscoveryService(bridge.cloudHandler);
             return bridge.cloudHandler;
         } catch (Exception e) {
-            logger.error("RachioFactory: Unable to create bridge thing: {}: ", e.getMessage());
+            logger.warn("RachioFactory: Unable to create bridge thing: {}: ", e.getMessage());
         }
         return null;
     }

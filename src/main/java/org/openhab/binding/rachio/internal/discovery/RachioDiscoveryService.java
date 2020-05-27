@@ -173,9 +173,9 @@ public class RachioDiscoveryService extends AbstractDiscoveryService {
 
             stopScan();
         } catch (RachioApiException e) {
-            logger.error("RachioDiscovery: Unexpected error while discovering Rachio devices/zones: {}", e.toString());
+            logger.warn("RachioDiscovery: Unexpected error while discovering Rachio devices/zones: {}", e.toString());
         } catch (Throwable e) {
-            logger.error("RachioDiscovery: Unexpected error while discovering Rachio devices/zones: {}",
+            logger.warn("RachioDiscovery: Unexpected error while discovering Rachio devices/zones: {}",
                     e.getMessage());
         }
     } // startScan()

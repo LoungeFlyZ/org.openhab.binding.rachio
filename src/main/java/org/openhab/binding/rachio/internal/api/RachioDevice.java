@@ -70,7 +70,7 @@ public class RachioDevice extends RachioCloudDevice {
         } catch (
 
         Exception e) {
-            logger.error("RachioDevice: Unable to initialize '{}': {}", device.name, e.getMessage());
+            logger.warn("RachioDevice: Unable to initialize '{}': {}", device.name, e.getMessage());
         }
     }
 

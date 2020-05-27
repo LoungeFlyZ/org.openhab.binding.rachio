@@ -119,24 +119,6 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
                 }
             }
 
-            // Prepare port mapping
-            /*
-             * String url = getCallbackUrl();
-             * if (!url.equals("")) {
-             * String port[] = url.split(":");
-             * int internalPort = Integer.parseInt(port[1]);
-             * int externalPort = 8443;
-             *
-             * if (network.initializePortMapping(externalPort, internalPort,
-             * RachioBindingConstants.PORT_REFRESH_INTERVAL)) {
-             * logger.info("RachioBridge: Port mapping initialzed, external {} -> internal {}", internalPort,
-             * externalPort);
-             * }
-             * }
-             */
-
-            // Bridge initialized, change to ONLINE state
-            // updateListenerManagement();
             logger.info("RachioCloud: Cloud connector initialized.");
             updateStatus(ThingStatus.ONLINE);
         } catch (RachioApiException e) {
@@ -147,7 +129,7 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
             errorMessage = e.getMessage();
         } finally {
             if (!errorMessage.isEmpty()) {
-                logger.error("RachioBridge: {}", errorMessage);
+                logger.warn("RachioBridge: {}", errorMessage);
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorMessage);
             }
         }
@@ -193,7 +175,7 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
                         "RachioBridge: API access blocked on update ({0} / {1}), reset at {2}",
                         checkApi.getLastApiResult().rateRemaining, checkApi.getLastApiResult().rateLimit,
                         checkApi.getLastApiResult().rateReset);
-                logger.error("{}", errorCritical);
+                logger.warn("{}", errorCritical);
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorCritical); // shutdown
                                                                                                          // bridge+devices+zones
                 return;
@@ -257,7 +239,7 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
             errorMessage = e.getMessage();
         } finally {
             if (!errorMessage.isEmpty()) {
-                logger.error("RachioBridge: {}", errorMessage);
+                logger.warn("RachioBridge: {}", errorMessage);
                 // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorMessage);
             }
             jobPending = false;
@@ -422,7 +404,7 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
         try {
             return rachioApi.getDevices();
         } catch (Exception e) {
-            logger.error("RachioBridgeHandler: Unable to retrieve device list: {}", e.getMessage());
+            logger.warn("RachioBridgeHandler: Unable to retrieve device list: {}", e.getMessage());
         }
         return null;
     }
@@ -480,7 +462,7 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
             logger.debug("RachioEvent {}.{} for unknown device '{}': {}", event.category, event.type, event.deviceId,
                     event.summary);
         } catch (Throwable e) {
-            logger.error("RachioEvent: Unable to process event {}.{} for device '{}': {}", event.category, event.type,
+            logger.warn("RachioEvent: Unable to process event {}.{} for device '{}': {}", event.category, event.type,
                     event.deviceId, e.getMessage());
         }
         return false;

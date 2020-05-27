@@ -61,7 +61,7 @@ public class RachioWebHookServlet extends HttpServlet {
             httpService.registerServlet(SERVLET_WEBHOOK_PATH, this, null, httpService.createDefaultHttpContext());
             logger.info("Started Rachio Webhook servlet at {}", SERVLET_WEBHOOK_PATH);
         } catch (ServletException | NamespaceException e) {
-            logger.error("Could not start Rachio Webhook servlet: {}", e.getMessage(), e);
+            logger.warn("Could not start Rachio Webhook servlet: {}", e.getMessage(), e);
         }
     }
 
@@ -88,7 +88,7 @@ public class RachioWebHookServlet extends HttpServlet {
             logger.trace("RachioWebHook: Reqeust from {}:{}{} ({}:{}, {})", ipAddress, request.getRemotePort(), path,
                     request.getRemoteHost(), request.getServerPort(), request.getProtocol());
             if (!path.equalsIgnoreCase(SERVLET_WEBHOOK_PATH)) {
-                logger.error("RachioWebHook: Invalid request received - path = {}", path);
+                logger.warn("RachioWebHook: Invalid request received - path = {}", path);
                 return;
             }
 
@@ -128,9 +128,9 @@ public class RachioWebHookServlet extends HttpServlet {
             }
         } catch (Exception e) {
             if (data != null) {
-                logger.error("RachioWebHook: Exception processing callback: {}, data='{}'", e.getMessage(), data);
+                logger.warn("RachioWebHook: Exception processing callback: {}, data='{}'", e.getMessage(), data);
             } else {
-                logger.error("RachioWebHook: Exception processing callback: {}", e.getMessage());
+                logger.warn("RachioWebHook: Exception processing callback: {}", e.getMessage());
 
             }
         } finally {

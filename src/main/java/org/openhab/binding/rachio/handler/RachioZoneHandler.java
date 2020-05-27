@@ -99,7 +99,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
                 }
             }
         } catch (Exception e) {
-            logger.error("RachioZone: Initialisation failed: {}", e.getMessage());
+            logger.warn("RachioZone: Initialisation failed: {}", e.getMessage());
         }
 
         updateStatus(ThingStatus.OFFLINE);
@@ -167,7 +167,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
             }
         } finally {
             if (!errorMessage.isEmpty()) {
-                logger.error("RachioZoneHandler: {}", errorMessage);
+                logger.warn("RachioZoneHandler: {}", errorMessage);
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorMessage);
             }
         }
@@ -223,7 +223,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
                 postChannelData();
             }
         } catch (Throwable e) {
-            logger.error("RachioZone: Unable to process event: {}", e.getMessage());
+            logger.warn("RachioZone: Unable to process event: {}", e.getMessage());
         }
 
         return update;

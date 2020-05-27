@@ -59,7 +59,7 @@ public class RachioImageServlet extends HttpServlet {
             httpService.registerServlet(SERVLET_IMAGE_PATH, this, null, httpService.createDefaultHttpContext());
             logger.info("Started RachioImage servlet at {}", SERVLET_IMAGE_PATH);
         } catch (ServletException | NamespaceException e) {
-            logger.error("Could not start RachioImage servlet: {}", e.getMessage(), e);
+            logger.warn("Could not start RachioImage servlet: {}", e.getMessage(), e);
         }
     }
 
@@ -87,10 +87,10 @@ public class RachioImageServlet extends HttpServlet {
             logger.trace("RachioImage: Reqeust from {}:{}{} ({}:{}, {})", ipAddress, request.getRemotePort(), path,
                     request.getRemoteHost(), request.getServerPort(), request.getProtocol());
             if (!request.getMethod().equalsIgnoreCase(HTTP_METHOD_GET)) {
-                logger.error("RachioImage: Unexpected method='{}'", request.getMethod());
+                logger.warn("RachioImage: Unexpected method='{}'", request.getMethod());
             }
             if (!path.equalsIgnoreCase(SERVLET_IMAGE_PATH)) {
-                logger.error("RachioImage: Invalid request received - path = {}", path);
+                logger.warn("RachioImage: Invalid request received - path = {}", path);
                 return;
             }
 
@@ -113,7 +113,7 @@ public class RachioImageServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            logger.error("RachioImage: Unable to process request: {}", e.getMessage());
+            logger.warn("RachioImage: Unable to process request: {}", e.getMessage());
         } finally {
             if (writer != null) {
                 writer.flush();

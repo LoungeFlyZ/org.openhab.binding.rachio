@@ -101,7 +101,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
             }
         } finally {
             if (!errorMessage.isEmpty()) {
-                logger.error("RachioBridge: {}", errorMessage);
+                logger.warn("RachioBridge: {}", errorMessage);
             }
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorMessage);
         }
@@ -176,7 +176,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
             errorMessage = e.getMessage();
         } finally {
             if (!errorMessage.isEmpty()) {
-                logger.error("RachioDevice.handleCommand: {}", errorMessage);
+                logger.warn("RachioDevice.handleCommand: {}", errorMessage);
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorMessage);
             }
         }
@@ -328,7 +328,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
                     dev.name, dev.id, event.summary);
             return false;
         } catch (Throwable e) {
-            logger.error("RachioDevice: Unable to process '{}.{}' - {}: {}", event.type, event.subType, event.summary,
+            logger.warn("RachioDevice: Unable to process '{}.{}' - {}: {}", event.type, event.subType, event.summary,
                     e.getMessage());
             return false;
         }

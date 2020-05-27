@@ -75,7 +75,7 @@ public class RachioApi {
             }
 
             if (isRateLimitCritical()) {
-                logger.error(
+                logger.warn(
                         "RachioApi: Remaing number of API calls is getting critical: limit={}, remaining={}, reset at {}",
                         rateLimit, rateRemaining, rateReset);
                 return;
@@ -189,7 +189,7 @@ public class RachioApi {
         }
 
         httpApi = null;
-        logger.error("RachioApi.initialize(): API initialization failed!");
+        logger.warn("RachioApi.initialize(): API initialization failed!");
         return false;
     } // initialize()
 
@@ -479,7 +479,7 @@ public class RachioApi {
             } catch (NoSuchFieldException ex) {
                 // skip it
             } catch (IllegalAccessException ex) {
-                logger.error("Unable to copy field: {}", f.getName());
+                logger.warn("Unable to copy field: {}", f.getName());
             }
         } // or (Field f : fields)
     } // copyMatchingFields
