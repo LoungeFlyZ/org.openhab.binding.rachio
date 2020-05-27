@@ -127,12 +127,6 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
     public boolean webHookEvent(String ipAddress, RachioEvent event) {
         try {
             logger.trace("RachioEvent: Event for device '{}' received", event.deviceId);
-            // if (!RachioNetwork.isIpInSubnet(ipAddress, getIpFilter()) && !rachioNetwork.isIpInAwsList(ipAddress)) {
-            //     logger.error("RachioBridge: Request from unknown IP address range, might be abuse! Request rejected");
-            //     return false;
-            // }
-
-            // event.setEventParms();// process event parameters
             for (HashMap.Entry<String, RachioBridge> be : bridgeList.entrySet()) {
                 RachioBridge bridge = be.getValue();
                 logger.trace("RachioEvent: Check for externalId: '{}' / '{}'", event.externalId,
