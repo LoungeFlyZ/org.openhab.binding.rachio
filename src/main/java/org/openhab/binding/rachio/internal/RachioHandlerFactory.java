@@ -58,7 +58,6 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
     private final Map<ThingUID, ServiceRegistration<?>> discoveryServiceReg = new HashMap<>();
     private final HashMap<String, RachioBridge> bridgeList;
     private final RachioConfiguration bindingConfig = new RachioConfiguration();
-    private final RachioNetwork rachioNetwork = new RachioNetwork();
 
     /**
      * OSGi activation callback.
@@ -70,7 +69,6 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
         super.activate(componentContext);
         logger.debug("RachioBridge: Activate, configurarion (services/rachio.cfg):");
         bindingConfig.updateConfig(configProperties);
-        rachioNetwork.initializeAwsList(); // Load list of AWS IP address ranges
     }
 
     public RachioHandlerFactory() {
@@ -129,10 +127,10 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
     public boolean webHookEvent(String ipAddress, RachioEvent event) {
         try {
             logger.trace("RachioEvent: Event for device '{}' received", event.deviceId);
-            if (!RachioNetwork.isIpInSubnet(ipAddress, getIpFilter()) && !rachioNetwork.isIpInAwsList(ipAddress)) {
-                logger.error("RachioBridge: Request from unknown IP address range, might be abuse! Request rejected");
-                return false;
-            }
+            // if (!RachioNetwork.isIpInSubnet(ipAddress, getIpFilter()) && !rachioNetwork.isIpInAwsList(ipAddress)) {
+            //     logger.error("RachioBridge: Request from unknown IP address range, might be abuse! Request rejected");
+            //     return false;
+            // }
 
             // event.setEventParms();// process event parameters
             for (HashMap.Entry<String, RachioBridge> be : bridgeList.entrySet()) {
