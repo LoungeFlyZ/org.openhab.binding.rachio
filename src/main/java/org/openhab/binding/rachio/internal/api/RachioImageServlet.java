@@ -22,14 +22,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.openhab.binding.rachio.internal.RachioHandlerFactory;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -46,7 +43,6 @@ public class RachioImageServlet extends HttpServlet {
     private final Logger logger = LoggerFactory.getLogger(RachioImageServlet.class);
 
     private HttpService httpService;
-    private RachioHandlerFactory rachioHandlerFactory;
 
     /**
      * OSGi activation callback.
@@ -72,7 +68,7 @@ public class RachioImageServlet extends HttpServlet {
         logger.info("RachioImage: Servlet stopped");
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -130,18 +126,6 @@ public class RachioImageServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Origin", "*");
         // response.setHeader("Access-Control-Allow-Methods", "GET");
         // response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    }
-
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
-    public void setRachioHandlerFactory(RachioHandlerFactory rachioHandlerFactory) {
-        if (rachioHandlerFactory != null) {
-            this.rachioHandlerFactory = rachioHandlerFactory;
-            logger.debug("RachioImage: HandlerFactory bound");
-        }
-    }
-
-    public void unsetRachioHandlerFactory(RachioHandlerFactory rachioHandlerFactory) {
-        this.rachioHandlerFactory = null;
     }
 
     @Reference

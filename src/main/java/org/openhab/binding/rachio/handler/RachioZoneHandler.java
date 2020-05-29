@@ -65,7 +65,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
         super(thing);
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     public void initialize() {
         logger.debug("RachioZone: Initializing zone '{}'", this.getThing().getUID().toString());
@@ -105,7 +105,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
         updateStatus(ThingStatus.OFFLINE);
     } // initialize()
 
-    @SuppressWarnings("null")
+    
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         /*
@@ -173,7 +173,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
         }
     } // handleCommand()
 
-    @SuppressWarnings("null")
+    
     @Override
     public boolean onThingStateChangedl(@Nullable RachioDevice updatedDev, @Nullable RachioZone updatedZone) {
         if ((updatedZone != null) && (zone != null) && zone.id.equals(updatedZone.id)) {
@@ -186,7 +186,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
         return false;
     }
 
-    @SuppressWarnings("null")
+    
     public boolean webhookEvent(RachioEvent event) {
         boolean update = false;
         try {
@@ -230,7 +230,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
     } // webhookEvent()
 
     // @Override
-    @SuppressWarnings("null")
+    
     public void postChannelData() {
         if (zone != null) {
             updateChannel(CHANNEL_ZONE_NAME, new StringType(zone.name));
@@ -277,7 +277,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
         return true;
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
         super.bridgeStatusChanged(bridgeStatusInfo);
@@ -296,7 +296,7 @@ public class RachioZoneHandler extends BaseThingHandler implements RachioStatusL
         updateStatus(ThingStatus.OFFLINE);
     }
 
-    @SuppressWarnings("null")
+    
     private void updateProperties() {
         if ((cloudHandler != null) && (zone != null)) {
             logger.trace("Updating Rachio zone properties");

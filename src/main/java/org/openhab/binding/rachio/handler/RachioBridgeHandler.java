@@ -17,6 +17,7 @@ import java.security.MessageDigest;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,6 +33,8 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingUID;
+import org.eclipse.smarthome.core.thing.binding.ThingHandler;
+import org.eclipse.smarthome.core.thing.binding.ThingHandlerService;
 import org.eclipse.smarthome.core.thing.binding.ConfigStatusBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.rachio.internal.RachioConfiguration;
@@ -40,6 +43,7 @@ import org.openhab.binding.rachio.internal.api.RachioApiException;
 import org.openhab.binding.rachio.internal.api.RachioDevice;
 import org.openhab.binding.rachio.internal.api.RachioEvent;
 import org.openhab.binding.rachio.internal.api.RachioZone;
+import org.openhab.binding.rachio.internal.discovery.RachioDiscoveryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +89,10 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
 
     public void setConfiguration(RachioConfiguration defaultConfig) {
         bindingConfig = defaultConfig;
+    }
+
+    public RachioConfiguration getConfiguration() {
+        return bindingConfig;
     }
 
     /**
@@ -134,6 +142,11 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
             }
         }
     } // initialize()
+
+    @Override
+    public Collection<Class<? extends ThingHandlerService>> getServices() {
+        return Collections.singleton(RachioDiscoveryService.class);
+    }
 
     /**
      * Handle Thing commands - the bridge doesn't implement any commands
@@ -252,7 +265,7 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
     }
 
     /**
-     * Create a new SleepIQ cloud service connection. If a connection already exists, it will be lost.
+     * Create a new Rachio cloud service connection. If a connection already exists, it will be lost.
      *
      * @throws LoginException if there is an error while authenticating to the service
      */
@@ -376,13 +389,6 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
     }
 
     /**
-     *
-     */
-    public String getIpFilter() {
-        return getConfigAs(RachioConfiguration.class).ipFilter;
-    }
-
-    /**
      * Retrieve the default runtime from Thing config
      *
      * @return the polling interval in seconds
@@ -473,7 +479,7 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
     }
 
     /**
-     * Start or stop a background polling job to look for bed status updates based on whether or not there are any
+     * Start or stop a background polling job to look for status updates based on whether or not there are any
      * listeners to notify.
      */
     private synchronized void updateListenerManagement() {
@@ -537,17 +543,6 @@ public class RachioBridgeHandler extends ConfigStatusBridgeHandler {
      * @param bed the source of data
      * @param properties the properties to update (this may be <code>null</code>)
      * @return the given map (or a new map if no map was given) with updated/set properties from the supplied bed
-     */
-    /*
-     * public Map<String, String> updateProperties(final ThingUID uid, Map<String, String> properties) {
-     * if (rachioApi != null) {
-     * RachioDevice dev = rachioApi.getDevByUID(getThing().getUID(), uid);
-     * if (dev != null) {
-     * return dev.fillProperties();
-     * }
-     * }
-     * return null;
-     * }
      */
     private void updateProperties() {
         if (rachioApi != null) {

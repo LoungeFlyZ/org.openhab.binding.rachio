@@ -30,7 +30,6 @@ import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
 import org.eclipse.smarthome.core.types.State;
 import org.openhab.binding.rachio.RachioBindingConstants;
-import org.openhab.binding.rachio.internal.RachioConfiguration;
 import org.openhab.binding.rachio.internal.api.RachioApiException;
 import org.openhab.binding.rachio.internal.api.RachioDevice;
 import org.openhab.binding.rachio.internal.api.RachioEvent;
@@ -48,7 +47,6 @@ import org.slf4j.LoggerFactory;
 @NonNullByDefault
 public class RachioDeviceHandler extends BaseThingHandler implements RachioStatusListener {
     private final Logger logger = LoggerFactory.getLogger(RachioDeviceHandler.class);
-    private RachioConfiguration thingConfig = new RachioConfiguration();
 
     @Nullable
     Bridge bridge;
@@ -61,15 +59,17 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
     public RachioDeviceHandler(Thing thing) {
         super(thing);
     }
-
-    @SuppressWarnings("null")
+    
     @Override
     public void initialize() {
         logger.debug("RachioDevice: Initializing Rachio device '{}'.", getThing().getUID().getAsString());
 
         String errorMessage = "";
         try {
-            bridge = getBridge();
+            this.bridge = getBridge();
+            Bridge bridge = this.bridge;
+            
+
             if (bridge != null) {
                 ThingHandler handler = bridge.getHandler();
                 if ((handler != null) && (handler instanceof RachioBridgeHandler)) {
@@ -102,12 +102,11 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
         } finally {
             if (!errorMessage.isEmpty()) {
                 logger.warn("RachioBridge: {}", errorMessage);
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorMessage);
             }
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, errorMessage);
         }
     } // initialize()
 
-    @SuppressWarnings("null")
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         String channel = channelUID.getId();
@@ -182,7 +181,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
         }
     } // handleCommand()
 
-    @SuppressWarnings("null")
+    
     private void postChannelData() {
         if (dev != null) {
             logger.debug("RachioDevice: Updating  status");
@@ -222,7 +221,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
         return true;
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     public boolean onThingStateChangedl(@Nullable RachioDevice updatedDev, @Nullable RachioZone updatedZone) {
         if ((updatedDev != null) && (dev != null) && dev.id.equals(updatedDev.id)) {
@@ -235,7 +234,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
         return false;
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
         super.bridgeStatusChanged(bridgeStatusInfo);
@@ -255,7 +254,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
         updateStatus(ThingStatus.OFFLINE);
     }
 
-    @SuppressWarnings("null")
+    
     public boolean webhookEvent(RachioEvent event) {
         boolean update = true; // 1=event processed, 2=processed + force refresh, 0=unhandled event
         String errorMessage = "";
@@ -335,7 +334,7 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
 
     } // webhookEvent
 
-    @SuppressWarnings("null")
+    
     private void updateProperties() {
         if (dev != null) {
             logger.trace("Updating Rachio sprinkler properties");

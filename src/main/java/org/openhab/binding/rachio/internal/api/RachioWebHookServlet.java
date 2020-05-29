@@ -74,7 +74,7 @@ public class RachioWebHookServlet extends HttpServlet {
         logger.info("RachioWebHook: Servlet stopped");
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
         String data = inputStreamToString(request);

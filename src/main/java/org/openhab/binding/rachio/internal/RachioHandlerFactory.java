@@ -15,11 +15,9 @@ package org.openhab.binding.rachio.internal;
 import static org.openhab.binding.rachio.RachioBindingConstants.*;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.smarthome.config.discovery.DiscoveryService;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
@@ -31,7 +29,6 @@ import org.openhab.binding.rachio.handler.RachioBridgeHandler;
 import org.openhab.binding.rachio.handler.RachioDeviceHandler;
 import org.openhab.binding.rachio.handler.RachioZoneHandler;
 import org.openhab.binding.rachio.internal.api.RachioEvent;
-import org.openhab.binding.rachio.internal.discovery.RachioDiscoveryService;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -83,21 +80,18 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
 
     @Override
     protected @Nullable ThingHandler createHandler(Thing thing) {
-        try {
-            ThingTypeUID thingTypeUID = thing.getThingTypeUID();
-            logger.trace("RachioHandlerFactory: Create thing handler for type {}", thingTypeUID.toString());
-            if (SUPPORTED_BRIDGE_THING_TYPES_UIDS.contains(thingTypeUID)) {
-                return createBridge((Bridge) thing);
-            } else if (SUPPORTED_ZONE_THING_TYPES_UIDS.contains(thingTypeUID)) {
-                return new RachioZoneHandler(thing);
-            } else if (SUPPORTED_DEVICE_THING_TYPES_UIDS.contains(thingTypeUID)) {
-                return new RachioDeviceHandler(thing);
-            }
-        } catch (Exception e) {
-            logger.warn("RachioHandlerFactory:Exception while creating Rachio RThing handler: {}", e);
+        ThingTypeUID thingTypeUID = thing.getThingTypeUID();
+
+        if (thingTypeUID.equals(THING_TYPE_CLOUD)) {
+            return createBridge((Bridge) thing);
+        }
+        if (THING_TYPE_DEVICE.equals(thingTypeUID)) {
+            return new RachioDeviceHandler(thing);
+        }
+        if (THING_TYPE_ZONE.equals(thingTypeUID)) {
+            return new RachioZoneHandler(thing);
         }
 
-        logger.debug("RachioHandlerFactory:: Unable to create thing handler!");
         return null;
     }
 
@@ -106,7 +100,7 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
         logger.debug("RachioHandlerFactory:: Removing Rachio Cloud handler");
         if (thingHandler instanceof RachioBridgeHandler) {
             RachioBridgeHandler bridgeHandler = (RachioBridgeHandler) thingHandler;
-            unregisterDiscoveryService(bridgeHandler);
+            //unregisterDiscoveryService(bridgeHandler);
             bridgeHandler.shutdown();
         }
         if (thingHandler instanceof RachioDeviceHandler) {
@@ -146,22 +140,6 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
         return false;
     } // webHookEvent()
 
-    /**
-     * Get ipFilter as a list from all bridge things configurations
-     *
-     * @return ipFilter list - single ip, single subnet or list of ips/subnets
-     */
-    public String getIpFilter() {
-        String ipList = "";
-        for (HashMap.Entry<String, RachioBridge> be : bridgeList.entrySet()) {
-            RachioBridge bridge = be.getValue();
-            String ipFilter = bridge.cloudHandler.getIpFilter();
-            if (!ipFilter.equals("")) {
-                ipList = ipList + ";" + ipFilter;
-            }
-        }
-        return ipList;
-    } // getIpFilter()
 
     private RachioBridgeHandler createBridge(Bridge bridgeThing) {
         try {
@@ -171,7 +149,7 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
             bridge.cloudHandler.setConfiguration(bindingConfig);
             bridgeList.put(bridge.uid.toString(), bridge);
 
-            registerDiscoveryService(bridge.cloudHandler);
+            //registerDiscoveryService(bridge.cloudHandler);
             return bridge.cloudHandler;
         } catch (Exception e) {
             logger.warn("RachioFactory: Unable to create bridge thing: {}: ", e.getMessage());
@@ -179,33 +157,4 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
         return null;
     }
 
-    /**
-     * Register the given cloud handler to participate in discovery of new beds.
-     *
-     * @param cloudHandler the cloud handler to register (must not be <code>null</code>)
-     */
-    private synchronized void registerDiscoveryService(final RachioBridgeHandler cloudHandler) {
-        logger.debug("RachioHandlerFactory: Registering Rachio discovery service");
-        RachioDiscoveryService discoveryService = new RachioDiscoveryService();
-        discoveryService.setCloudHandler(cloudHandler);
-        discoveryServiceReg.put(cloudHandler.getThing().getUID(), bundleContext
-                .registerService(DiscoveryService.class.getName(), discoveryService, new Hashtable<String, Object>()));
-    }
-
-    /**
-     * Unregister the given cloud handler from participating in discovery of new beds.
-     *
-     * @param cloudHandler the cloud handler to unregister (must not be <code>null</code>)
-     */
-    private synchronized void unregisterDiscoveryService(final RachioBridgeHandler cloudHandler) {
-        ThingUID thingUID = cloudHandler.getThing().getUID();
-        ServiceRegistration<?> serviceReg = discoveryServiceReg.get(thingUID);
-        if (serviceReg == null) {
-            return;
-        }
-
-        logger.debug("RachioHandlerFactory: Unregistering Rachio discovery service");
-        serviceReg.unregister();
-        discoveryServiceReg.remove(thingUID);
-    }
 }

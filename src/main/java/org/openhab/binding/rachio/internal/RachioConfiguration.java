@@ -37,7 +37,6 @@ public class RachioConfiguration {
     public int defaultRuntime = DEFAULT_ZONE_RUNTIME;
     public String callbackUrl = "";
     public Boolean clearAllCallbacks = false;
-    public String ipFilter = "192.168.0.0/16;10.0.0.0/8;172.16.0.0/12";
 
     public void updateConfig(Map<String, Object> config) {
         for (HashMap.Entry<String, Object> ce : config.entrySet()) {
@@ -60,8 +59,6 @@ public class RachioConfiguration {
                 this.defaultRuntime = Integer.parseInt(value);
             } else if (key.equalsIgnoreCase(PARAM_CALLBACK_URL)) {
                 this.callbackUrl = value;
-            } else if (key.equalsIgnoreCase(PARAM_IPFILTER)) {
-                this.ipFilter = value;
             } else if (key.equalsIgnoreCase(PARAM_CLEAR_CALLBACK)) {
                 String str = value;
                 this.clearAllCallbacks = str.toLowerCase().equals("true");

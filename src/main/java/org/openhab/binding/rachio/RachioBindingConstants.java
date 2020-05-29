@@ -12,6 +12,8 @@
  */
 package org.openhab.binding.rachio;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,9 +47,8 @@ public class RachioBindingConstants {
             .of(THING_TYPE_DEVICE, THING_TYPE_ZONE).collect(Collectors.toSet());
     public static final Set<ThingTypeUID> SUPPORTED_ZONE_THING_TYPES_UIDS = Stream.of(THING_TYPE_ZONE)
             .collect(Collectors.toSet());
-    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Stream
-            .concat(SUPPORTED_BRIDGE_THING_TYPES_UIDS.stream(), SUPPORTED_DEVICE_THING_TYPES_UIDS.stream())
-            .collect(Collectors.toSet());
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = new HashSet<>(
+                Arrays.asList(THING_TYPE_CLOUD, THING_TYPE_DEVICE, THING_TYPE_ZONE));
 
     // Config opntions (e.g. rachio.cfg)
     public static final String PARAM_APIKEY = "apikey";
@@ -55,7 +56,6 @@ public class RachioBindingConstants {
     public static final String PARAM_DEF_RUNTIME = "defaultRuntime";
     public static final String PARAM_CALLBACK_URL = "callbackUrl";
     public static final String PARAM_CLEAR_CALLBACK = "clearAllCallbacks";
-    public static final String PARAM_IPFILTER = "ipFilter";
 
     // List of non-standard Properties
     public static final String PROPERTY_IP_ADDRESS = "ipAddress";
