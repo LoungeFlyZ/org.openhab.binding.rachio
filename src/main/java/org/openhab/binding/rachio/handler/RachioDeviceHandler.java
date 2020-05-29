@@ -257,7 +257,6 @@ public class RachioDeviceHandler extends BaseThingHandler implements RachioStatu
     
     public boolean webhookEvent(RachioEvent event) {
         boolean update = true; // 1=event processed, 2=processed + force refresh, 0=unhandled event
-        String errorMessage = "";
 
         try {
             // dev.setEvent(event);

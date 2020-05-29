@@ -18,26 +18,19 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
-import org.eclipse.smarthome.config.discovery.DiscoveryService;
 import org.eclipse.smarthome.core.library.types.OnOffType;
-import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerService;
 import org.openhab.binding.rachio.handler.RachioBridgeHandler;
-import org.openhab.binding.rachio.internal.RachioConfiguration;
-import org.openhab.binding.rachio.internal.api.RachioApi;
-import org.openhab.binding.rachio.internal.api.RachioApiException;
 import org.openhab.binding.rachio.internal.api.RachioDevice;
 import org.openhab.binding.rachio.internal.api.RachioZone;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,16 +41,13 @@ import org.slf4j.LoggerFactory;
  * @author Markus Michels (markus7017)- Initial contribution
  */
 public class RachioDiscoveryService extends AbstractDiscoveryService 
-        implements DiscoveryService, ThingHandlerService {
+        implements ThingHandlerService {
 
     private static final int DISCOVERY_REFRESH_SEC = 900;
 
     private final Logger logger = LoggerFactory.getLogger(RachioDiscoveryService.class);
     private Future<?> scanTask;
     private ScheduledFuture<?> discoveryJob;
-    
-
-    private RachioApi rachioApi;
 
     private RachioBridgeHandler cloudHandler;
 
@@ -183,14 +173,4 @@ public class RachioDiscoveryService extends AbstractDiscoveryService
     protected synchronized void stopScan() {
         super.stopScan();
     }
-
-    private Map<String, String> fillProperties(String id) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put(Thing.PROPERTY_VENDOR, BINDING_VENDOR);
-        properties.put(PROPERTY_APIKEY, id);
-        properties.put(PROPERTY_EXT_ID, id);
-        properties.put(PROPERTY_NAME, "Rachio Cloud Connector");
-        return properties;
-    }
-
 } // class RachioDiscoveryService

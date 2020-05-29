@@ -16,8 +16,6 @@ import java.util.HashMap;
 
 import org.openhab.binding.rachio.internal.api.RachioApi.RachioApiResult;
 import org.openhab.binding.rachio.internal.api.RachioCloudDevice.RachioCloudNetworkSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link RachioEvent} A Rachio webhook event
@@ -25,7 +23,6 @@ import org.slf4j.LoggerFactory;
  * @author Markus Michels (markus7017) - Initial contribution
  */
 public class RachioEvent {
-    private final Logger logger = LoggerFactory.getLogger(RachioEvent.class);
 
     public class RachioEventProperty {
         public String propertyName;

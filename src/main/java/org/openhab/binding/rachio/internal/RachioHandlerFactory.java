@@ -29,7 +29,6 @@ import org.openhab.binding.rachio.handler.RachioBridgeHandler;
 import org.openhab.binding.rachio.handler.RachioDeviceHandler;
 import org.openhab.binding.rachio.handler.RachioZoneHandler;
 import org.openhab.binding.rachio.internal.api.RachioEvent;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -52,7 +51,6 @@ public class RachioHandlerFactory extends BaseThingHandlerFactory {
     }
 
     private final Logger logger = LoggerFactory.getLogger(RachioHandlerFactory.class);
-    private final Map<ThingUID, ServiceRegistration<?>> discoveryServiceReg = new HashMap<>();
     private final HashMap<String, RachioBridge> bridgeList;
     private final RachioConfiguration bindingConfig = new RachioConfiguration();
 
